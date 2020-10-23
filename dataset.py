@@ -296,6 +296,7 @@ class Yolo_dataset(Dataset):
             img = cv2.imread(img_path)
             # print("DEBUG", img_path)
             img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = cv2.resize(img, (self.cfg.width, self.cfg.height))
             if img is None:
                 continue
             oh, ow, oc = img.shape
@@ -395,6 +396,7 @@ class Yolo_dataset(Dataset):
         img = cv2.imread(os.path.join(self.cfg.dataset_dir, img_path))
         # img_height, img_width = img.shape[:2]
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img = cv2.resize(img, (self.cfg.width, self.cfg.height))
         # img = cv2.resize(img, (self.cfg.w, self.cfg.h))
         # img = torch.from_numpy(img.transpose(2, 0, 1)).float().div(255.0).unsqueeze(0)
         num_objs = len(bboxes_with_cls_id)
