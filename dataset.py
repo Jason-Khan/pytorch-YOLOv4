@@ -392,6 +392,7 @@ class Yolo_dataset(Dataset):
         img_path = self.imgs[index]
         bboxes_with_cls_id = np.array(self.truth.get(img_path), dtype=np.float)
         img = cv2.imread(os.path.join(self.cfg.dataset_dir, img_path))
+        print(os.path.join(self.cfg.dataset_dir, img_path))
         # img_height, img_width = img.shape[:2]
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # img = cv2.resize(img, (self.cfg.w, self.cfg.h))
