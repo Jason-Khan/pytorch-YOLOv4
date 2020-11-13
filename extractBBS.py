@@ -10,7 +10,7 @@ annotations = [""] * num_processes
 
 def extract(start_idx, end_idx, i):
     for idx in tqdm(range(start_idx, end_idx)):
-        directory = "../dataset/Y/"
+        directory = "../dataset/ynet/Y/"
         imname = "train_mask_{}.png".format(idx)
         im = cv2.imread(directory + imname)
         gray=cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
