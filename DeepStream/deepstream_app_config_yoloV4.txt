@@ -130,8 +130,8 @@ source-id=0
 [tracker]
 enable=1
 # For the case of NvDCF tracker, tracker-width and tracker-height must be a multiple of 32, respectively
-tracker-width=608
-tracker-height=608
+tracker-width=320
+tracker-height=320
 #ll-lib-file=/opt/nvidia/deepstream/deepstream-5.0/lib/libnvds_mot_iou.so
 #ll-lib-file=/opt/nvidia/deepstream/deepstream-5.0/lib/libnvds_nvdcf.so
 ll-lib-file=/opt/nvidia/deepstream/deepstream-5.0/lib/libnvds_mot_klt.so
