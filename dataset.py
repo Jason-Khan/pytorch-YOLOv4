@@ -20,6 +20,7 @@ import numpy as np
 
 import torch
 from torch.utils.data.dataset import Dataset
+from tqdm import tqdm
 
 
 def rand_uniform_strong(min, max):
@@ -259,21 +260,26 @@ class Yolo_dataset(Dataset):
             self.truth = json.load(f)
 
         # all_imgs = list(self.truth.keys())
-        # self.all_imgs_ind = [int(s.split('_')[1]) for s in all_imgs]
+        # all_imgs_ind = [int(s.split('_')[1]) for s in all_imgs]
+        self.all_imgs = []
+        self.all_bboxes = []
+        print("Preloading")
+        for i in tqdm(range(80000)):
+            img_path = os.path.join(self.im_dir, "roi{}.png".format(i))
+            img = cv2.imread(img_path)
+            img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+            img = cv2.resize(img, (self.cfg.width, self.cfg.height))
+            self.all_imgs.append(img)
+            out_bboxes = np.array(self.truth['img_{:d}'.format(i)]['boxes'])
+            out_bboxes1 = np.zeros([self.cfg.boxes, 5])	
+            out_bboxes1[:min(out_bboxes.shape[0], self.cfg.boxes), :4] = out_bboxes[:min(out_bboxes.shape[0], self.cfg.boxes)]
+            self.all_bboxes.append(out_bboxes1 * (self.cfg.width / 400)) 
 
     def __len__(self):
         return len(self.truth.keys())
 
     def __getitem__(self, index):
-        img_path = os.path.join(self.im_dir, "roi{}.png".format(index))
-        out_bboxes = np.array(self.truth['img_{:d}'.format(index)]['boxes'])
-        img = cv2.imread(img_path)
-        img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        img = cv2.resize(img, (self.cfg.width, self.cfg.height))
-
-        out_bboxes1 = np.zeros([self.cfg.boxes, 5])	
-        out_bboxes1[:min(out_bboxes.shape[0], self.cfg.boxes), :4] = out_bboxes[:min(out_bboxes.shape[0], self.cfg.boxes)]
-        return img, out_bboxes1 * (self.cfg.width / 400)
+        return self.all_imgs[index], self.all_bboxes[index]
 
     def _get_val_item(self, index):
         """
