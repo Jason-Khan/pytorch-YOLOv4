@@ -237,7 +237,6 @@ class Yolo_loss(nn.Module):
         for output_id, output in enumerate(xin):
             batchsize = output.shape[0]
             fsize = output.shape[2]
-            logging.debug("debug", output.shape)
             n_ch = 5 + self.n_classes
 
             output = output.view(batchsize, self.n_anchors, n_ch, fsize, fsize)

@@ -273,7 +273,7 @@ class Yolo_dataset(Dataset):
 
         out_bboxes1 = np.zeros([self.cfg.boxes, 5])	
         out_bboxes1[:min(out_bboxes.shape[0], self.cfg.boxes), :4] = out_bboxes[:min(out_bboxes.shape[0], self.cfg.boxes)]
-        return img, out_bboxes1
+        return img, out_bboxes1 * (self.cfg.width / 400)
 
     def _get_val_item(self, index):
         """
