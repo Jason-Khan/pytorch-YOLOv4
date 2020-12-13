@@ -283,7 +283,6 @@ def collate(batch):
     images = np.concatenate(images, axis=0)
     images = images.transpose(0, 3, 1, 2)
     images = torch.from_numpy(images).div(255.0)
-    logging.info("debug", np.array(bboxes).shape)
     bboxes = np.concatenate(bboxes, axis=0)
     bboxes = torch.from_numpy(bboxes)
     return images, bboxes

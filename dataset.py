@@ -266,11 +266,14 @@ class Yolo_dataset(Dataset):
 
     def __getitem__(self, index):
         img_path = os.path.join(self.im_dir, "roi{}.png".format(index))
-        bboxes = self.truth['img_{:d}'.format(index)]['boxes']
+        out_bboxes = self.truth['img_{:d}'.format(index)]['boxes']
         img = cv2.imread(img_path)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = cv2.resize(img, (self.cfg.width, self.cfg.height))
-        return img, bboxes
+
+        out_bboxes1 = np.zeros([self.cfg.boxes, 5])	
+        out_bboxes1[:min(out_bboxes.shape[0], self.cfg.boxes)] = out_bboxes[:min(out_bboxes.shape[0], self.cfg.boxes)]
+        return img, out_bboxes1
 
     def _get_val_item(self, index):
         """
