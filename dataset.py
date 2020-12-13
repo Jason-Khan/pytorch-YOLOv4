@@ -266,7 +266,7 @@ class Yolo_dataset(Dataset):
 
     def __getitem__(self, index):
         img_path = os.path.join(self.im_dir, "roi{}.png".format(index))
-        out_bboxes = self.truth['img_{:d}'.format(index)]['boxes']
+        out_bboxes = np.array(self.truth['img_{:d}'.format(index)]['boxes'])
         img = cv2.imread(img_path)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         img = cv2.resize(img, (self.cfg.width, self.cfg.height))
