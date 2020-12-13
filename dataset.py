@@ -253,6 +253,7 @@ class Yolo_dataset(Dataset):
         self.cfg = cfg
         self.train = train
         self.im_dir = os.path.join(self.cfg.dataset_dir, "roi_train_im")
+        self.mask_dir = os.path.join(self.cfg.dataset_dir, "roi_train_masks")
 
         with open(os.path.join(self.mask_dir, "all_bboxes.json"), 'r') as f:
             self.truth = json.load(f)
