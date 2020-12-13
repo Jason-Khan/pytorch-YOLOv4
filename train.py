@@ -289,17 +289,17 @@ def collate(batch):
 
 
 def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=20, img_scale=0.5):
-    train_dataset = Yolo_dataset(config.train_label, config, train=True)
-    val_dataset = Yolo_dataset(config.val_label, config, train=False)
+    train_dataset = Yolo_dataset(config, train=True)
+    # val_dataset = Yolo_dataset(config.val_label, config, train=False)
 
     n_train = len(train_dataset)
-    n_val = len(val_dataset)
+    # n_val = len(val_dataset)
 
     train_loader = DataLoader(train_dataset, batch_size=config.batch // config.subdivisions, shuffle=True,
                               num_workers=4, pin_memory=True, drop_last=True, collate_fn=collate)
 
-    val_loader = DataLoader(val_dataset, batch_size=config.batch // config.subdivisions, shuffle=True, num_workers=0,
-                            pin_memory=True, drop_last=True, collate_fn=val_collate)
+    # val_loader = DataLoader(val_dataset, batch_size=config.batch // config.subdivisions, shuffle=True, num_workers=0,
+    #                         pin_memory=True, drop_last=True, collate_fn=val_collate)
 
     writer = SummaryWriter(log_dir=config.TRAIN_TENSORBOARD_DIR,
                            filename_suffix=f'OPT_{config.TRAIN_OPTIMIZER}_LR_{config.learning_rate}_BS_{config.batch}_Sub_{config.subdivisions}_Size_{config.width}',
@@ -412,32 +412,32 @@ def train(model, device, config, epochs=5, batch_size=1, save_cp=True, log_step=
 
                 pbar.update(images.shape[0])
 
-            if cfg.use_darknet_cfg:
-                eval_model = Darknet(cfg.cfgfile, inference=True)
-            else:
-                eval_model = Yolov4(cfg.pretrained, n_classes=cfg.classes, inference=True)
-            # eval_model = Yolov4(yolov4conv137weight=None, n_classes=config.classes, inference=True)
-            if torch.cuda.device_count() > 1:
-                eval_model.load_state_dict(model.module.state_dict())
-            else:
-                eval_model.load_state_dict(model.state_dict())
-            eval_model.to(device)
-            evaluator = evaluate(eval_model, val_loader, config, device)
-            del eval_model
+            # if cfg.use_darknet_cfg:
+            #     eval_model = Darknet(cfg.cfgfile, inference=True)
+            # else:
+            #     eval_model = Yolov4(cfg.pretrained, n_classes=cfg.classes, inference=True)
+            # # eval_model = Yolov4(yolov4conv137weight=None, n_classes=config.classes, inference=True)
+            # if torch.cuda.device_count() > 1:
+            #     eval_model.load_state_dict(model.module.state_dict())
+            # else:
+            #     eval_model.load_state_dict(model.state_dict())
+            # eval_model.to(device)
+            # evaluator = evaluate(eval_model, val_loader, config, device)
+            # del eval_model
 
-            stats = evaluator.coco_eval['bbox'].stats
-            writer.add_scalar('train/AP', stats[0], global_step)
-            writer.add_scalar('train/AP50', stats[1], global_step)
-            writer.add_scalar('train/AP75', stats[2], global_step)
-            writer.add_scalar('train/AP_small', stats[3], global_step)
-            writer.add_scalar('train/AP_medium', stats[4], global_step)
-            writer.add_scalar('train/AP_large', stats[5], global_step)
-            writer.add_scalar('train/AR1', stats[6], global_step)
-            writer.add_scalar('train/AR10', stats[7], global_step)
-            writer.add_scalar('train/AR100', stats[8], global_step)
-            writer.add_scalar('train/AR_small', stats[9], global_step)
-            writer.add_scalar('train/AR_medium', stats[10], global_step)
-            writer.add_scalar('train/AR_large', stats[11], global_step)
+            # stats = evaluator.coco_eval['bbox'].stats
+            # writer.add_scalar('train/AP', stats[0], global_step)
+            # writer.add_scalar('train/AP50', stats[1], global_step)
+            # writer.add_scalar('train/AP75', stats[2], global_step)
+            # writer.add_scalar('train/AP_small', stats[3], global_step)
+            # writer.add_scalar('train/AP_medium', stats[4], global_step)
+            # writer.add_scalar('train/AP_large', stats[5], global_step)
+            # writer.add_scalar('train/AR1', stats[6], global_step)
+            # writer.add_scalar('train/AR10', stats[7], global_step)
+            # writer.add_scalar('train/AR100', stats[8], global_step)
+            # writer.add_scalar('train/AR_small', stats[9], global_step)
+            # writer.add_scalar('train/AR_medium', stats[10], global_step)
+            # writer.add_scalar('train/AR_large', stats[11], global_step)
 
             if save_cp:
                 try:
@@ -541,7 +541,6 @@ def get_args(**kwargs):
                         help='dataset dir', dest='dataset_dir')
     parser.add_argument('-pretrained', type=str, default=None, help='pretrained yolov4.conv.137')
     parser.add_argument('-classes', type=int, default=80, help='dataset classes')
-    parser.add_argument('-train_label_path', dest='train_label', type=str, default='train.txt', help="train label path")
     parser.add_argument(
         '-optimizer', type=str, default='adam',
         help='training optimizer',
