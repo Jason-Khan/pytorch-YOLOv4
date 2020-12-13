@@ -272,7 +272,7 @@ class Yolo_dataset(Dataset):
         img = cv2.resize(img, (self.cfg.width, self.cfg.height))
 
         out_bboxes1 = np.zeros([self.cfg.boxes, 5])	
-        out_bboxes1[:min(out_bboxes.shape[0], self.cfg.boxes)] = out_bboxes[:min(out_bboxes.shape[0], self.cfg.boxes)]
+        out_bboxes1[:min(out_bboxes.shape[0], self.cfg.boxes), :4] = out_bboxes[:min(out_bboxes.shape[0], self.cfg.boxes)]
         return img, out_bboxes1
 
     def _get_val_item(self, index):
