@@ -329,7 +329,7 @@ if __name__ == "__main__":
     random.seed(2020)
     np.random.seed(2020)
     Cfg.dataset_dir = '../rpn_output'
-    dataset = Yolo_dataset(Cfg.train_label, Cfg)
+    dataset = Yolo_dataset(Cfg)
     for i in range(5):
         out_img, out_bboxes = dataset.__getitem__(i)
         a = draw_box(out_img.copy(), out_bboxes.astype(np.int32))
